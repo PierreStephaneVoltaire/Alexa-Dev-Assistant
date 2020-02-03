@@ -2,10 +2,16 @@ service: alexa-slack-assistant
 # app and org for use with dashboard.serverless.com
 app: alexa-slack-assistant
 org: psvoltaire96
+custom:
+  webpack:
+    webpackConfig: 'webpack.config.js'   # Name of webpack configuration file
+    includeModules: false   # Node modules configuration for packaging
+    packager: 'npm'   # Packager that will be used to package your external modules
+    excludeFiles: src/**/*.test.js # Provide a glob for files to ignore
 plugins:
-  - serverless-plugin-typescript
-  - serverless-offline
+  - serverless-webpack
   - serverless-dotenv-plugin
+  - serverless-plugin-bespoken
 provider:
   name: aws
   runtime: nodejs12.x
