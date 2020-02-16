@@ -8,10 +8,179 @@ custom:
     includeModules: false   # Node modules configuration for packaging
     packager: 'npm'   # Packager that will be used to package your external modules
     excludeFiles: src/**/*.test.js # Provide a glob for files to ignore
+  alexa:
+    vendorId: ${env:AMAZON_VENDOR_ID}
+    clientId: ${env:AMAZON_CLIENT_ID}
+    clientSecret: ${env:AMAZON_CLIENT_SECRET}
+    localServerPort: 3000
+    skills:
+      - id: ${env:assistMeWithSlackId}
+        manifest:
+          apis:
+            custom: {}
+          publishingInformation:
+            locales:
+              en-US:
+                name: assistMeWithSlack
+                models:
+                  en-US:
+                    interactionModel:
+                      languageModel:
+                        invocationName: assistmewithslack
+                        intents:
+                        - name: AMAZON.FallbackIntent
+                          samples: []
+                        - name: AMAZON.CancelIntent
+                          samples: []
+                        - name: AMAZON.HelpIntent
+                          samples:
+                          - help
+                          - What does this app do
+                        - name: AMAZON.StopIntent
+                          samples: []
+                        - name: AMAZON.NavigateHomeIntent
+                          samples: []
+                        - name: AMAZON.ReadAction<object@Calendar>
+                          samples: []
+                        - name: scrum_description
+                          slots:
+                          - name: scrum_role
+                            type: SCRUM_Role
+                            samples:
+                            - any
+                            - "{scrum_role}"
+                            - all of them
+                          samples:
+                          - what are the responsabilities of a {scrum_role}
+                          - what is a {scrum_role}
+                          - what does a {scrum_role} do
+                        types:
+                        - name: SCRUM_Role
+                          values:
+                          - name:
+                              value: product manager
+                              synonyms:
+                              - manager
+                              - pm
+                          - name:
+                              value: Stakeholders
+                              synonyms:
+                              - Users
+                              - User
+                              - Client
+                          - name:
+                              value: Scrum master
+                              synonyms:
+                              - project facilitator
+                          - name:
+                              value: Product owner
+                              synonyms:
+                              - customer representative
+                              - PO
+                          - name:
+                              value: Development team
+                              synonyms:
+                              - computer programmers
+                              - web designers
+                              - coders
+                              - video game developers
+                              - game developers
+                              - web developers
+                              - software engineers
+                              - programmers
+                              - developers
+                              - software developers
+                              - video game developer
+                              - graphic designer
+                              - game developer
+                              - video game designer
+                              - game designer
+                              - computer scientist
+                              - computer engineer
+                              - lead developer
+                              - computer programmer
+                              - web designer
+                              - web developer
+                              - programmer
+                              - software developer
+                              - Software Engineer
+                              - Engineer
+                              - Developer
+                              - Dev
+                        - name: SCRUM_Artifacts
+                          values:
+                          - name:
+                              value: Increment
+                          - name:
+                              value: Release plan
+                          - name:
+                              value: backlog
+                              synonyms:
+                              - sprint backlog
+                              - Product backlog
+                              - backlog
+                          - name:
+                              value: Product roadmap
+                          - name:
+                              value: Product vision statement
+                              synonyms:
+                              - summary
+                              - elevator pitch
+                        - name: SCRUM_Activity
+                          values:
+                          - name:
+                              value: Sprint retrospective
+                          - name:
+                              value: Sprint review
+                              synonyms:
+                              - Iteration review
+                          - name:
+                              value: Daily scrum
+                              synonyms:
+                              - Standup meeting
+                              - Daily Standup
+                          - name:
+                              value: Sprint planning
+                              synonyms:
+                              - Iteration planning
+                          - name:
+                              value: Sprint
+                          - name:
+                              value: Release planning
+                          - name:
+                              value: Project planning
+                      dialog:
+                        intents:
+                        - name: scrum_description
+                          confirmationRequired: false
+                          prompts: {}
+                          slots:
+                          - name: scrum_role
+                            type: SCRUM_Role
+                            confirmationRequired: false
+                            elicitationRequired: true
+                            prompts:
+                              elicitation: Elicit.Slot.1552883189970.295292804726
+                            validations:
+                            - type: hasEntityResolutionMatch
+                              prompt: Slot.Validation.1552883189970.295292804726.1437359058282
+                        delegationStrategy: ALWAYS
+                      prompts:
+                      - id: Elicit.Slot.1552883189970.295292804726
+                        variations:
+                        - type: PlainText
+                          value: What role would you like to know about?
+                      - id: Slot.Validation.1552883189970.295292804726.1437359058282
+                        variations:
+                        - type: PlainText
+                          value: That's not really a scrum role. the major roles in scrum  are the Development
+                            team, the Product owner, the Scrum master and the Stakeholders. which one
+                            would you like to know more about?                
 plugins:
   - serverless-webpack
   - serverless-dotenv-plugin
   - serverless-plugin-bespoken
+  - serverless-alexa-skills
 provider:
   name: aws
   runtime: nodejs12.x
