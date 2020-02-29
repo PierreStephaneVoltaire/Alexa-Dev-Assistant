@@ -43,6 +43,9 @@
   },
   "dependencies": {
     "@types/dotenv": "^8.2.0",
+    "ask-sdk": "^2.7.0",
+    "ask-sdk-core": "^2.7.0",
+    "ask-sdk-model": "^1.25.2",
     "dotenv": "^4.0.0"
   }
 }
